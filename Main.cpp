@@ -1,22 +1,38 @@
 #include <SFML/Graphics.hpp>
 
+
+// entry point for the program	
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML WORKS!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	// declare variable for display window
+	sf::RenderWindow gamewindow;
+	gamewindow.create(sf::VideoMode::getDesktopMode(), "Button Masher", 
+		sf::Style::Titlebar | sf::Style::Close);
 
-	while (window.isOpen())
+	// game loop
+	while (gamewindow.isOpen())
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
+		// TODO: Check for input
+		sf::Event gameEvent;
+		while (gamewindow.pollEvent(gameEvent))
 		{
-			if (event.type == sf::Event::Closed)
-				window.close();
+			// Process events
+
+			//check if event is closed
+			if (gameEvent.type == sf::Event::Closed)
+			{
+				//close game window
+				gamewindow.close();
+			}
 		}
-		window.clear();
-		window.draw(shape);
-		window.display();
+
+		// TODO: update game state
+
+		// TODO: Draw Graphics
+
+
 	}
+
+
 	return 0;
 }
