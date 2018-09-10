@@ -29,7 +29,26 @@ int main()
 	// create music object
 	sf::Music gameMusic;
 	gameMusic.openFromFile("audio/music.ogg");
-	gameMusic.play();
+	gameMusic.play();
+
+	// create font
+	sf::Font gameFont;
+	gameFont.loadFromFile("fonts/mainFont.ttf");
+
+	//create title
+	sf::Text titleText;
+	titleText.setFont(gameFont);
+	titleText.setString("Button Masher!");
+	titleText.setPosition(gamewindow.getSize().x / 2 - titleText.getLocalBounds().width / 2, 30);
+
+	//create author text
+	sf::Text authorText;
+	authorText.setFont(gameFont);
+	authorText.setString("By Uncle Phil");
+	authorText.setCharacterSize(50);
+	authorText.setFillColor(sf::Color::Magenta);
+	authorText.setStyle(sf::Text::Italic | sf::Text::Bold);
+	authorText.setPosition(gamewindow.getSize().x / 2 - authorText.getLocalBounds().width / 2, 200);
 
 	//*************************
 	//******* game loop *******
@@ -57,6 +76,9 @@ int main()
 
 		//draw everything
 		gamewindow.draw(buttonSprite);
+		gamewindow.draw(titleText);
+		gamewindow.draw(authorText);
+
 
 		//display window content
 		gamewindow.display();
