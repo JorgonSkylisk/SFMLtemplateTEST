@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 // Library needed for playing music and sound effects
 #include <SFML/Audio.hpp>
+#include <string>
 
 // entry point for the program	
 int main()
@@ -29,7 +30,13 @@ int main()
 	// create music object
 	sf::Music gameMusic;
 	gameMusic.openFromFile("audio/music.ogg");
-	gameMusic.play();
+	//gameMusic.play();
+
+	//create sound object
+	sf::SoundBuffer clickBuffer;
+	clickBuffer.loadFromFile("audio/buttonclick.ogg");
+	sf::Sound clickSound;
+	clickSound.setBuffer(clickBuffer);
 
 	// create font
 	sf::Font gameFont;
@@ -50,6 +57,27 @@ int main()
 	authorText.setStyle(sf::Text::Italic | sf::Text::Bold);
 	authorText.setPosition(gamewindow.getSize().x / 2 - authorText.getLocalBounds().width / 2, 200);
 
+	//create score
+	int score = 0;
+	sf::Text scoreText;
+	scoreText.setFont(gameFont);
+	scoreText.setString("Score: " + std::to_string(score));
+	scoreText.setCharacterSize(16);
+	scoreText.setFillColor(sf::Color::White);
+	scoreText.setPosition(30, 30);
+
+	//create timer
+	sf::Text timerText;
+	timerText.setFont(gameFont);
+	timerText.setString("Time Remaining: 0");
+	timerText.setCharacterSize(16);
+	timerText.setFillColor(sf::Color::White);
+	timerText.setPosition(gamewindow.getSize().x - timerText.getLocalBounds().width - 30, 30);
+	sf::Time timeLimit = sf::seconds(10.0f);
+	sf::Time timeRemaining = timeLimit;
+	sf::Clock gameClock;
+
+
 	//*************************
 	//******* game loop *******
 	//*************************
@@ -61,6 +89,16 @@ int main()
 		{
 			// Process events
 
+			if (gameEvent.type == sf::Event::MouseButtonPressed)
+			{
+				if (buttonSprite.getGlobalBounds().contains(gameEvent.mouseButton.x, gameEvent.mouseButton.y))
+				{
+					score = score + 1;
+					//play sound fx
+					clickSound.play();
+				}
+			}
+
 			//check if event is closed
 			if (gameEvent.type == sf::Event::Closed)
 			{
@@ -70,6 +108,13 @@ int main()
 		}
 
 		// TODO: update game state
+		//score setup
+		scoreText.setString("Score: " + std::to_string(score));
+
+		//setup timer
+		sf::Time frameTime = gameClock.restart();
+		timeRemaining = timeRemaining - frameTime;
+		timerText.setString("Time Remaining: " + std::to_string((int)timeRemaining.asSeconds()));
 
 		// TODO: Draw Graphics
 		gamewindow.clear(sf::Color::Transparent);
@@ -78,6 +123,8 @@ int main()
 		gamewindow.draw(buttonSprite);
 		gamewindow.draw(titleText);
 		gamewindow.draw(authorText);
+		gamewindow.draw(scoreText);
+		gamewindow.draw(timerText);
 
 
 		//display window content
