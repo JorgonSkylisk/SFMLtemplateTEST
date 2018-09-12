@@ -14,6 +14,9 @@ int main()
 	gamewindow.create(sf::VideoMode::getDesktopMode(), "Button Masher", 
 		sf::Style::Titlebar | sf::Style::Close);
 
+	// active gameplay variable
+	bool playing = false;
+
 	//create button sprite
 	sf::Texture buttonTexture;
 	buttonTexture.loadFromFile("graphics/button.png");
@@ -66,6 +69,14 @@ int main()
 	scoreText.setFillColor(sf::Color::White);
 	scoreText.setPosition(30, 30);
 
+	//create start prompt text
+	sf::Text promptText;
+	promptText.setFont(gameFont);
+	promptText.setString("Click the button to start the game!");
+	promptText.setCharacterSize(24);
+	promptText.setFillColor(sf::Color::Green);
+	promptText.setPosition(gamewindow.getSize().x / 2 - promptText.getLocalBounds().width / 2, 600);
+
 	//create timer
 	sf::Text timerText;
 	timerText.setFont(gameFont);
@@ -93,11 +104,23 @@ int main()
 			{
 				if (buttonSprite.getGlobalBounds().contains(gameEvent.mouseButton.x, gameEvent.mouseButton.y))
 				{
-					score = score + 1;
+					if (playing == true)
+					{
+						score = score + 1;
+					}
+					else
+					{
+						playing = true;
+						score = 0;
+						timeRemaining = timeLimit;
+						promptText.setString("Click the button as fast as you can!");
+
+					}
 					//play sound fx
 					clickSound.play();
 				}
-			}
+			}
+
 
 			//check if event is closed
 			if (gameEvent.type == sf::Event::Closed)
@@ -113,8 +136,18 @@ int main()
 
 		//setup timer
 		sf::Time frameTime = gameClock.restart();
-		timeRemaining = timeRemaining - frameTime;
-		timerText.setString("Time Remaining: " + std::to_string((int)timeRemaining.asSeconds()));
+		if (playing == true)
+		{
+			timeRemaining = timeRemaining - frameTime;
+			if (timeRemaining.asSeconds() <= 0)
+			{
+				playing = false;
+				promptText.setString("Your final score was: " + std::to_string(score) + ". Click the button to start a new game!");
+			}
+		}
+		timerText.setString("Time Remaining: " + std::to_string((int)timeRemaining.asSeconds()));
+
+
 
 		// TODO: Draw Graphics
 		gamewindow.clear(sf::Color::Transparent);
@@ -125,6 +158,7 @@ int main()
 		gamewindow.draw(authorText);
 		gamewindow.draw(scoreText);
 		gamewindow.draw(timerText);
+		gamewindow.draw(promptText);
 
 
 		//display window content
