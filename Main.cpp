@@ -33,13 +33,25 @@ int main()
 	// create music object
 	sf::Music gameMusic;
 	gameMusic.openFromFile("audio/music.ogg");
-	gameMusic.play();
+	//gameMusic.play();
 
 	//create sound object
 	sf::SoundBuffer clickBuffer;
 	clickBuffer.loadFromFile("audio/buttonclick.ogg");
 	sf::Sound clickSound;
 	clickSound.setBuffer(clickBuffer);
+
+	//create announcer sound object
+	sf::SoundBuffer announcerBuffer;
+	announcerBuffer.loadFromFile("audio/announcer.ogg");
+	sf::Sound announcerSound;
+	announcerSound.setBuffer(announcerBuffer);
+
+	//create missed sound object
+	sf::SoundBuffer MissedClickBuffer;
+	MissedClickBuffer.loadFromFile("audio/missClick.ogg");
+	sf::Sound MissedClickSound;
+	MissedClickSound.setBuffer(MissedClickBuffer);
 
 	//create gameover sound
 	sf::SoundBuffer gameOverBuffer;
@@ -120,10 +132,14 @@ int main()
 						score = 0;
 						timeRemaining = timeLimit;
 						promptText.setString("Click the button as fast as you can!");
-
+						announcerSound.play();
 					}
 					//play sound fx
 					clickSound.play();
+				}
+				else
+				{
+					MissedClickSound.play();
 				}
 			}
 
